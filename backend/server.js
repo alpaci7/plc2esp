@@ -1,4 +1,4 @@
-const axios = require('axios');
+const axios = require('axios').default;
 const express = require('express');
 const cors = require("cors");
 
@@ -17,7 +17,18 @@ app.post('/control-led', async (req, res) => {
     const esp32Url = `http://192.168.11.102/led/${action}`; 
 
     // Send request to ESP32 to toggle LED
-    const response = await axios.get(esp32Url);
+
+  axios.get(esp32Url, { timeout: 5000 }) // Timeout after 5 seconds
+    .then(response => {
+      res.status(200).json({
+        message: `LED turned ${action}`,
+        response: response.data,
+      });
+    })
+  .catch(error => {
+    console.error('Error controlling ESP32:', error.message);
+    res.status(500).json({ error: 'Failed to control ESP32' });
+  });
 
     res.status(200).json({
       message: `LED turned ${action}`,
