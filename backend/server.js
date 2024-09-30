@@ -18,7 +18,7 @@ app.post('/control-led', async (req, res) => {
 
     // Send request to ESP32 to toggle LED
 
-  axios.get(esp32Url, { timeout: 5000 }) // Timeout after 5 seconds
+  await axios.get(esp32Url, { timeout: 5000 }) // Timeout after 5 seconds
     .then(response => {
       res.status(200).json({
         message: `LED turned ${action}`,
